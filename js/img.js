@@ -267,8 +267,7 @@ const kkimg = { name: "KK Image Features",
 	sett: function(tab, div) { if (tab!="general") return;
 		div.innerHTML+= `
 			<label><input type="checkbox" onchange="localStorage.setItem('imgexpand',this.checked);kkimg.reset();kkimg.startup();"`+(localStorage.getItem("imgexpand")=="true"?'checked="checked"':'')+` />Inline image expansion</label>
-			<label><input type="checkbox" onchange="localStorage.setItem('imghover',this.checked);$id('hoverimg').src='';"`+(localStorage.getItem("imghover")=="true"?'checked="checked"':'')+` />Image hover</label>
-			<label><input type="checkbox" onchange="localStorage.setItem('galmode',this.checked);kkgal.reset();kkgal.startup();"`+(localStorage.getItem("galmode")=="true"?'checked="checked"':'')+` />Gallery mode</label>`;
+			<label><input type="checkbox" onchange="localStorage.setItem('imghover',this.checked);$id('hoverimg').src='';"`+(localStorage.getItem("imghover")=="true"?'checked="checked"':'')+` />Image hover</label>`;
 	},
 	/* - */
 	postimg: null,
