@@ -164,40 +164,47 @@ function sortByBump($thrXobj, $thrYobj) {
 function drawHeader() {
     global $conf;
     echo '
-    <html>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-			<meta http-equiv="cache-control" content="max-age=0" />
-			<meta http-equiv="cache-control" content="no-cache" />
-			<meta http-equiv="expires" content="0" />
-			<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
-			<meta http-equiv="pragma" content="no-cache" />
-			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-           
-            <link class="linkstyle" rel="stylesheet" type="text/css" href="static/css/heyuriclassic.css" title="Heyuri Classic" />
-			 <link class="linkstyle" rel="stylesheet alternate" type="text/css" href="static/css/futaba.css" title="Futaba" />
-			 <link class="linkstyle" rel="stylesheet alternate" type="text/css" href="static/css/oldheyuri.css" title="Sakomoto" />
-             <meta http-equiv="cache-control" content="no-cache" />
-			 <link rel="shortcut icon" href="static/image/favicon.png" />
+    <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="cache-control" content="max-age=0" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="expires" content="0" />
+	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+	<meta http-equiv="pragma" content="no-cache" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="Berry" content="no" />
+	<title>'.$conf['boardTitle'].'</title>
+	<meta name="robots" content="follow,archive" />
+	<link class="linkstyle" rel="stylesheet" type="text/css" href="static/css/heyuriclassic.css" title="Heyuri Classic" />
+	<link class="linkstyle" rel="stylesheet alternate" type="text/css" href="static/css/futaba.css" title="Futaba" />
+	<link class="linkstyle" rel="stylesheet alternate" type="text/css" href="static/css/oldheyuri.css" title="Sakomoto" />
+	<link rel="shortcut icon" href="static/image/favicon.png" />
+	<script type="text/javascript" src="js/koko.js"></script>
+	<script type="text/javascript" src="js/style.js"></script>
+	<script type="text/javascript" src="js/img.js"></script>
+	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 
-			<script type="text/javascript" src="js/koko.js"></script>
-			<script type="text/javascript" src="js/style.js"></script>
-            <script type="text/javascript" src="js/preview.js"></script>	
-            <script type="text/javascript" src="js/img.js"></script>			
-             
-        <title>'.$conf['boardTitle'].'</title>
-		<meta name="robots" content="follow,archive" />
-			
-		  <center id="header">
-            <div id="nav">
-			     <div class="adminbar" align="right">[<a class="extr" href="'.$conf['home'].'">Home</a>]</div>
-            </div>	
-               <div class="logo">
-			 <h1 class="mtitle">'.$conf['boardTitle'].'</h1>
-			 '.$conf['boardSubTitle'].'
-		  </div></center>
-        
-        <hr class="top" width="90%" size="1"><br>
-        <hr size="1"><body> <script id="wz_tooltip" type="text/javascript" src="js/wz_tooltip.js"></script>';
+	<!--&TOPLINKS-->
+	<div class="boardlist">
+		<small class="toplinks">'.file_get_contents('toplinks.txt').'</small>
+		<div class="adminbar">[<a class="extr" href="'.$conf['home'].'">Home</a>]</div>
+	</div>
+	<!--/&TOPLINKS-->
+
+	<!--&BODYHEAD-->
+
+<body>
+	<script id="wz_tooltip" type="text/javascript" src="js/wz_tooltip.js"></script>
+	<a name="top"></a>
+	<!--&TOPLINKS/-->
+	<center id="header">
+		<div class="logo">
+			<br />
+			<h1 class="mtitle">'.$conf['boardTitle'].'</h1>
+			'.$conf['boardSubTitle'].'
+			<hr class="top" width="90%" size="1" />
+		</div>
+	</center>';
 }
 
 function drawFooter() {

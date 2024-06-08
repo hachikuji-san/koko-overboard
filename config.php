@@ -3,6 +3,7 @@ return $conf = [
     'boardTitle' => 'Overboard @ lolisecks.net',
     'boardSubTitle' => 'overboard for kokonotsuba boards',
     'home' => "https://example.com/main.php",
+    'toplinks' => 'toplinks.txt',
     
     'threadsPerPage' => 10,
     
