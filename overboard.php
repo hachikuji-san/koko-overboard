@@ -130,7 +130,7 @@ function quote_link($comment, $dbBoardDetails){
             foreach($matches_unique as $val) {
                 $post = getPostData(intval($val[2]), $dbBoardDetails);
                 if($post){
-                    $comment = str_replace($val[0], '<a href="'.$dbBoardDetails['boardurl'].'koko?res='.($post[0]['resto']?$post[0]['resto']:$post[0]['no']).'#p'.$post[0]['no'].'" class="quotelink">'.$val[0].'</a>', $comment);
+                    $comment = str_replace($val[0], '<a href="'.$dbBoardDetails['boardurl'].'koko.php?res='.($post[0]['resto']?$post[0]['resto']:$post[0]['no']).'#p'.$post[0]['no'].'" class="quotelink">'.$val[0].'</a>', $comment);
                 } else {
                     $comment = str_replace($val[0], '<a href="javascript:void(0);" class="quotelink"><del>'.$val[0].'</del></a>', $comment);
                 }
@@ -186,7 +186,7 @@ function drawHeader() {
 
 	<!--&TOPLINKS-->
 	<div class="boardlist">
-		<small class="toplinks">'.file_get_contents('toplinks.txt').'</small>
+		<small class="toplinks">'.file_get_contents($conf['toplinks']).'</small>
 		<div class="adminbar">[<a class="extr" href="'.$conf['home'].'">Home</a>]</div>
 	</div>
 	<!--/&TOPLINKS-->
