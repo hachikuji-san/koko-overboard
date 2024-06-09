@@ -7,6 +7,8 @@ return $conf = [
     
     'threadsPerPage' => 10,
     
+    'thumbExt' => 'png',
+    
     'dbInfo' => [
         'host'     => 'localhost',
         'username' => 'sqlusername',

@@ -239,6 +239,7 @@ function drawPageingBar($page=1){
 }
 
 function drawPost(array $postData, $board) {
+    global $conf;
     if($postData == null) return -1;
     
     //prepare comment for drawing
@@ -271,7 +272,7 @@ function drawPost(array $postData, $board) {
         </tr>';
     } else {
         $shortendImageName = $postData['fname'];
-        $imgDisplayURL = (file_exists($board['imageDir'].$postData['tim'].'s'.$postData['ext'])) ? $imgDisplayURL = $board['imageDir'].$postData['tim'].'s'.$postData['ext'] : $imgDisplayURL = $board['imageDir'].$postData['tim'].$postData['ext'];
+        $imgDisplayURL = (file_exists($board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageDir'].$postData['tim'].$postData['ext'];
         if(strlen($postData['fname']) > 20) $shortendImageName = substr($postData['fname'], 0, 35).'(...)';
         echo '<tr>
         <td class="doubledash" valign="top">
@@ -280,8 +281,8 @@ function drawPost(array $postData, $board) {
         <td class="post reply" id="p'.$uid.'">
         <div class="postinfo"><big class="title"><b>'.$postData['sub'].'</b></big> <span class="name"><b>'.$postData['name'].'</b></span> <span class="time">'.$postData['now'].'</span></label>
         <nobr><span class="postnum">
-        <a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a> 
         <nobr>
+        <a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a> 
         </div>
         <div class="filesize">
             File: <a href="'.$board['imageDir'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$postData['fname'].$postData['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageName.$postData['ext'].'\'"> '.$shortendImageName.$postData['ext'].'</a>
@@ -295,6 +296,7 @@ function drawPost(array $postData, $board) {
 }
 
 function drawThread(boardThread $thread) {
+    global $conf;
     $threadOP = array_merge(...getPostData($thread->getThread(), $thread->getBoard()));
     
     $board = $thread->getBoard();
@@ -316,7 +318,7 @@ function drawThread(boardThread $thread) {
     //begin thread div
     echo '<div class="thread" id="t'.$threadOP['no'].'">';
     //draw thread OP
-    $imgDisplayURL = (file_exists($board['imageDir'].$threadOP['tim'].'s'.$threadOP['ext'])) ? $imgDisplayURL = $board['imageDir'].$threadOP['tim'].'s'.$threadOP['ext'] : $imgDisplayURL = $board['imageDir'].$threadOP['tim'].$threadOP['ext'];
+    $imgDisplayURL = (file_exists($board['imageDir'].$threadOP['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageDir'].$threadOP['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageDir'].$threadOP['tim'].$threadOP['ext'];
     $fileDisplay = '<div class="filesize">File: <a href="'.$board['imageDir'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$threadOP['fname'].$threadOP['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageName.$threadOP['ext'].'\'"> '.$shortendImageName.$threadOP['ext'].'</a> <a href="'.$board['imageDir'].$threadOP['tim'].$threadOP['ext'].'" download="'.$threadOP['fname'].'"><div class="download"></div></a> <small>('.$threadOP['imgsize'].', '.$threadOP['imgw'].'x'.$threadOP['imgh'].')</small></div>
 				<a href="'.$board['imageDir'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$threadOP['tw'].'" height="'.$threadOP['th'].'" class="postimg" alt="'.$threadOP['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>' ;
     if($threadOP['fname'] == '') $fileDisplay = ''; // don't display file stuffz if there's no file (for textboard)
