@@ -7,7 +7,7 @@ return $conf = [
     
     'threadsPerPage' => 10,
     
-    'thumbExt' => 'png',
+    'thumbExt' => '.png',
     
     'dbInfo' => [
         'host'     => 'localhost',
