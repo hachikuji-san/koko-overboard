@@ -281,8 +281,7 @@ function drawPost(array $postData, $board) {
             <b>'.$postData['sub'].'</b></big> <span class="name"><b>'.$postData['name'].'</b></span> <span class="time">'.$postData['now'].'</span></label>
         <nobr><span class="postnum">
         <a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a> 
-        </nobr>
-        </div>
+        </nobr></div>
         <blockquote class="comment">'.$postData['com'].'</blockquote>
         </td>
         </tr>';
@@ -304,7 +303,8 @@ function drawPost(array $postData, $board) {
 						</div>
 						<div class="filesize">File: <a href="'.$board['imageDir'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$shortendImageName.'\';" onmouseout="this.textContent=\''.$postData['fname'].$postData['ext'].'\'">'.$postData['fname'].$postData['ext'].'</a> <a href="'.$imgDisplayURL.'" download="'.$imgDisplayURL.'"><div class="download"></div></a> <small>('.$postData['imgsize'].', '.$postData['imgw'].'x'.$postData['imgh'].')</small> </div>
 						<a href="'.$board['imageDir'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$postData['tw'].'" height="'.$postData['th'].'" class="postimg" alt="'.$postData['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>
-						<blockquote class="comment">'.$postData['com'].'</blockquote>			
+						
+                        <blockquote class="comment">'.$postData['com'].'</blockquote>			
 					</td>
 				</tr>';
     }
