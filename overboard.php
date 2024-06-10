@@ -353,13 +353,14 @@ function drawThread(boardThread $thread) {
     
     
     $postsInThread = fetchPostList($threadOP['no'], $board);
+    $postsData = array_merge(getPostData($postsInThread, $board));
     //draw last 5 posts
     if($countPostsInThread != 0) {
         for($i = $postsOmitted + 1; $i < $countPostsInThread + 1; $i++) {
             
             if($i < 0) break;
             else if ($i == 0) $i++;
-            $postData = array_merge(...getPostData($postsInThread[$i], $board));
+            $postData = $postsData[$i];
             drawPost($postData, $board);
         }
     }
