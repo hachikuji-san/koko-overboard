@@ -8,6 +8,11 @@ $conf = require_once 'config.php' ;
 $boardlist = $conf['boards'];
 $dbDetails = $conf['dbInfo'];
 
+/* board filter cookie */
+$filterCookie = [
+    'blackListed' => array(), //empty
+];
+
 //db connection
 if (!$con=mysqli_connect($dbDetails['host'], $dbDetails['username'], $dbDetails['password'])) {
     echo S_SQLCONF;	//unable to connect to DB (wrong user/pass?)
@@ -125,19 +130,6 @@ function getBumpTime($threadNo, $dbBoardDetails) {
     return $bumpstr;
 }
 
-//used for checking if image exists or not
-function isUrlValid($url) {
-    // Create a stream context with "ignore_errors" set to true
-    $context = stream_context_create(['http' => ['ignore_errors' => true]]);
-    // Fetch the URL headers
-    $headers = get_headers($url, 0, $context);
-    // Check if the response code contains "404"
-    if (strpos($headers[0], '404') !== false) {
-        return false; // URL is invalid or returns a 404 error
-    }
-    return true; // URL is valid
-}
-
 //quote text
 function quote_unkfunc($comment){
     $comment = preg_replace('/(^|<br \/>)((?:&gt;|＞).*?)(?=<br \/>|$)/ui', '$1<span class="unkfunc">$2</span>', $comment);
@@ -231,6 +223,28 @@ function drawFooter() {
         </center>';
 }
 
+function drawBoardFilterForm() {
+    $boardCheckList = function() {
+        global $boardlist;
+        $dat = '';
+        foreach($boardlist as $board) {
+            $dat .= '<input type="checkbox" id="vehicle1" name="" value="boardnjame"> <label for="vehicle1"> a board</label><br>';
+        }
+    };
+    echo '<center>
+            <table>
+                <tbody>
+                    <td><details class="reply"> <summary>Boards</summary>
+                        <form action='.$_SERVER['PHP_SELF'].' method="POST">
+                        '.$boardCheckList.'
+                        </form>
+                        </details>
+                    </td>
+                </tbody>
+            </table>
+         </center>';
+}
+
 function drawPageingBar($page=1){
     global $conf;
     global $boardlist;
@@ -283,8 +297,8 @@ function drawPost(array $postData, $board) {
         </tr>';
     } else {
         $shortendImageName = $postData['fname'];
-        (isUrlValid($board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageDir'].$postData['tim'].$postData['ext'];
-        if(strlen($postData['fname']) > 20) $shortendImageName = substr($postData['fname'], 0, 35).'(...)';
+        (file_exists($board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageAddr'].$postData['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageAddr'].$postData['tim'].$postData['ext'];
+        if(strlen($postData['fname']) > 20) $shortendImageName = substr($postData['fname'], 0, 35).'(...)'; else $shortendImageName = $postData['fname'].$postData['ext'];
         echo '
             <tr>
 					<td class="doubledash" valign="top">
@@ -297,8 +311,8 @@ function drawPost(array $postData, $board) {
 							<nobr><span class="postnum">
 									<a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a> </span></nobr>
 						</div>
-						<div class="filesize">File: <a href="'.$board['imageDir'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$shortendImageName.'\';" onmouseout="this.textContent=\''.$postData['fname'].$postData['ext'].'\'">'.$postData['fname'].$postData['ext'].'</a> <a href="'.$imgDisplayURL.'" download="'.$imgDisplayURL.'"><div class="download"></div></a> <small>('.$postData['imgsize'].', '.$postData['imgw'].'x'.$postData['imgh'].')</small> </div>
-						<a href="'.$board['imageDir'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$postData['tw'].'" height="'.$postData['th'].'" class="postimg" alt="'.$postData['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>
+						<div class="filesize">File: <a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$postData['fname'].$postData['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageName.'\'">'.$shortendImageName.'</a> <a href="'.$imgDisplayURL.'" download="'.$imgDisplayURL.'"><div class="download"></div></a> <small>('.$postData['imgsize'].', '.$postData['imgw'].'x'.$postData['imgh'].')</small> </div>
+						<a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$postData['tw'].'" height="'.$postData['th'].'" class="postimg" alt="'.$postData['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>
 						
                         <blockquote class="comment">'.$postData['com'].'</blockquote>			
 					</td>
@@ -320,9 +334,9 @@ function drawThread(boardThread $thread) {
     //begin thread div
     echo '<div class="thread" id="t'.$threadOP['no'].'">';
     //draw thread OP
-    (isUrlValid($board['imageDir'].$threadOP['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageDir'].$threadOP['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageDir'].$threadOP['tim'].$threadOP['ext'];
-    $fileDisplay = '<div class="filesize">File: <a href="'.$board['imageDir'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$threadOP['fname'].$threadOP['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageName.$threadOP['ext'].'\'"> '.$shortendImageName.$threadOP['ext'].'</a> <a href="'.$board['imageDir'].$threadOP['tim'].$threadOP['ext'].'" download="'.$threadOP['fname'].'"><div class="download"></div></a> <small>('.$threadOP['imgsize'].', '.$threadOP['imgw'].'x'.$threadOP['imgh'].')</small></div>
-				<a href="'.$board['imageDir'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$threadOP['tw'].'" height="'.$threadOP['th'].'" class="postimg" alt="'.$threadOP['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>' ;
+    (file_exists($board['imageDir'].$threadOP['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageAddr'].$threadOP['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageAddr'].$threadOP['tim'].$threadOP['ext'];
+    $fileDisplay = '<div class="filesize">File: <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$threadOP['fname'].$threadOP['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageName.$threadOP['ext'].'\'"> '.$shortendImageName.$threadOP['ext'].'</a> <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" download="'.$threadOP['fname'].'"><div class="download"></div></a> <small>('.$threadOP['imgsize'].', '.$threadOP['imgw'].'x'.$threadOP['imgh'].')</small></div>
+				<a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$threadOP['tw'].'" height="'.$threadOP['th'].'" class="postimg" alt="'.$threadOP['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>' ;
     if($threadOP['fname'] == '') $fileDisplay = ''; // don't display file stuffz if there's no file (for textboard)
     if($threadOP['email'] == 'noko' || !isset($threadOP['email']) || $threadOP['email'] == '') {
         echo  '<b><a href=\''.$board['boardurl'].'\'> '.$thread->getBoard()['boardname'].' </a></b><br>
@@ -353,7 +367,7 @@ function drawThread(boardThread $thread) {
     
     
     $postsInThread = fetchPostList($threadOP['no'], $board);
-    $postsData = array_merge(getPostData($postsInThread, $board));
+    $postsData = getPostData($postsInThread, $board);
     //draw last 5 posts
     if($countPostsInThread != 0) {
         for($i = $postsOmitted + 1; $i < $countPostsInThread + 1; $i++) {
@@ -394,7 +408,7 @@ function drawOverBoardThreads($page = 1) {
         //sort by bump time
         $threads = array_merge(...$threads);
         usort($threads, "sortByBump");
-        //echo '<pre>'; print_r($threads); echo '</pre>';
+
         $currentLine =  ($page - 1) * $conf['threadsPerPage'] ;
         
         //draw!
@@ -416,6 +430,7 @@ if(isset($_GET['page'])){
         $_GET['page'] = 1;
     $page = $_GET['page'];
     drawHeader();
+//    drawBoardFilterForm();
     drawOverboardThreads($page);
     drawPageingBar($page);
     drawFooter();
@@ -424,6 +439,7 @@ if(isset($_GET['page'])){
 }
 
 drawHeader();
+//drawBoardFilterForm();
 drawOverboardThreads();
 drawPageingBar(1);
 drawFooter();
