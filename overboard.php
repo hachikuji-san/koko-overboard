@@ -285,7 +285,7 @@ function drawPost(array $postData, $board) {
 						&gt;&gt;
 					</td>
 					<td class="post reply" id="p'.$postData['no'].'">
-						<div class="postinfo"><label><input type="checkbox" name="'.$postData['no'].'" value="delete">
+						<div class="postinfo"><label>
                             <big class="title"><b>'.$postData['sub'].'</b></big> 
                                 <span class="name"><b>'.$postData['name'].'</b></span> <span class="time">'.$postData['now'].'</span></label>
 							<nobr><span class="postnum">
