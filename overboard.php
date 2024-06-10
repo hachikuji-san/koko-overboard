@@ -164,8 +164,8 @@ function sortByBump($thrXobj, $thrYobj) {
     $thrXData = array_merge(...getPostData($thrXobj->getThread(), $thrXobj->getBoard()));
     $thrYData = array_merge(...getPostData($thrYobj->getThread(), $thrYobj->getBoard()));
     
-    $thrXBumpTime = new DateTime($thrXData['root']);
-    $thrYBumpTime = new DateTime($thrYData['root']);
+    $thrXBumpTime = $thrXData['root'];
+    $thrYBumpTime = $thrYData['root'];
     
     if($thrXBumpTime == $thrYBumpTime) return 0; //they are the same
     if($thrXBumpTime > $thrYBumpTime) return -1; //X bump time is bigger than Y therefore it goes at the top of the list
