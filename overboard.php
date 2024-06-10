@@ -257,17 +257,7 @@ function drawPost(array $postData, $board) {
     
     //prepare comment for drawing
     $postData['com'] = prepareComment($postData['com'], $board);
-    //post uid (stops js from getting confused
-    $uid =  function($str, $len=null) {
-        $binhash = md5($str, true);
-        $numhash = unpack('N2', $binhash);
-        $hash = $numhash[1] . $numhash[2];
-        if($len && is_int($len)) {
-            $hash = substr($hash, 0, $len);
-        }
-        return $hash;
-    }; $uid = $uid($postData['no'], 4);
-    
+
     echo '<table><tbody>'; //begin thread post preview
     //imageless post
     if($postData['fname'] == '') {
@@ -275,7 +265,7 @@ function drawPost(array $postData, $board) {
         <td class="doubledash" valign="top">
         &gt;&gt;
         </td>
-        <td class="post reply" id="p'.$uid.'">
+        <td class="post reply" id="p'.$postData['no'].'">
         <div class="postinfo"><label>
             <big class="title">
             <b>'.$postData['sub'].'</b></big> <span class="name"><b>'.$postData['name'].'</b></span> <span class="time">'.$postData['now'].'</span></label>
@@ -320,16 +310,6 @@ function drawThread(boardThread $thread) {
     //for OP
     if(strlen($threadOP['fname']) > 20) $shortendImageName = substr($threadOP['fname'], 0, 35).'(...)';
     $threadOP['com'] = prepareComment($threadOP['com'], $board);
-    //post uid (stops js from getting confused
-    $uid =  function($str, $len=null) {
-        $binhash = md5($str, true);
-        $numhash = unpack('N2', $binhash);
-        $hash = $numhash[1] . $numhash[2];
-        if($len && is_int($len)) {
-            $hash = substr($hash, 0, $len);
-        }
-        return $hash;
-    }; $uid = $uid($threadOP['no'], 4);
     
     //begin thread div
     echo '<div class="thread" id="t'.$threadOP['no'].'">';
@@ -340,7 +320,7 @@ function drawThread(boardThread $thread) {
     if($threadOP['fname'] == '') $fileDisplay = ''; // don't display file stuffz if there's no file (for textboard)
     if($threadOP['email'] == 'noko' || !isset($threadOP['email']) || $threadOP['email'] == '') {
         echo  '<b><a href=\''.$board['boardurl'].'\'> '.$thread->getBoard()['boardname'].' </a></b><br>
-			<div class="post op" id="p'.$uid.'">
+			<div class="post op" id="p'.$threadOP['no'].'">
 				'.$fileDisplay.'
 				<span class="postinfo"><label><big class="title"><b>'.$threadOP['sub'].'</b></big> <span class="name"><b>'.$threadOP['name'].'</b></span> <span class="time">'.$threadOP['root'].'</span></label>
 					<nobr><span class="postnum">
@@ -350,7 +330,7 @@ function drawThread(boardThread $thread) {
 				<blockquote class="comment">'.$threadOP['com'].'</blockquote></div>';
     } else {
         echo '<b><a href=\''.$board['boardurl'].'\'> '.$board['boardname'].' </a></b><br>
-			<div class="post op" id="p'.$uid.'">
+			<div class="post op" id="p'.$threadOP['no'].'">
 				'.$fileDisplay.'
 				<span class="postinfo"><label><big class="title"><b>'.$threadOP['sub'].'</b></big> <span class="name"><b><a href="mailto:'.$threadOP['email'].'">'.$threadOP['name'].'</a></b></span> <span class="time">'.$threadOP['root'].'</span></label>
 					<nobr><span class="postnum">
