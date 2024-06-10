@@ -115,6 +115,19 @@ function getTotalThreadCount_acrossBoards() {
     return $total;
 }
 
+//used for checking if image exists or not
+function isUrlValid($url) {
+    // Create a stream context with "ignore_errors" set to true
+    $context = stream_context_create(['http' => ['ignore_errors' => true]]);
+    // Fetch the URL headers
+    $headers = get_headers($url, 0, $context);
+    // Check if the response code contains "404"
+    if (strpos($headers[0], '404') !== false) {
+        return false; // URL is invalid or returns a 404 error
+    }
+    return true; // URL is valid
+}
+
 //quote text
 function quote_unkfunc($comment){
     $comment = preg_replace('/(^|<br \/>)((?:&gt;|＞).*?)(?=<br \/>|$)/ui', '$1<span class="unkfunc">$2</span>', $comment);
@@ -272,7 +285,7 @@ function drawPost(array $postData, $board) {
         </tr>';
     } else {
         $shortendImageName = $postData['fname'];
-        $imgDisplayURL = (file_exists($board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageDir'].$postData['tim'].$postData['ext'];
+        (isUrlValid($board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageDir'].$postData['tim'].$postData['ext'];
         if(strlen($postData['fname']) > 20) $shortendImageName = substr($postData['fname'], 0, 35).'(...)';
         echo '<tr>
         <td class="doubledash" valign="top">
@@ -318,7 +331,7 @@ function drawThread(boardThread $thread) {
     //begin thread div
     echo '<div class="thread" id="t'.$threadOP['no'].'">';
     //draw thread OP
-    $imgDisplayURL = (file_exists($board['imageDir'].$threadOP['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageDir'].$threadOP['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageDir'].$threadOP['tim'].$threadOP['ext'];
+    (isUrlValid($board['imageDir'].$threadOP['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageDir'].$threadOP['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageDir'].$threadOP['tim'].$threadOP['ext'];
     $fileDisplay = '<div class="filesize">File: <a href="'.$board['imageDir'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$threadOP['fname'].$threadOP['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageName.$threadOP['ext'].'\'"> '.$shortendImageName.$threadOP['ext'].'</a> <a href="'.$board['imageDir'].$threadOP['tim'].$threadOP['ext'].'" download="'.$threadOP['fname'].'"><div class="download"></div></a> <small>('.$threadOP['imgsize'].', '.$threadOP['imgw'].'x'.$threadOP['imgh'].')</small></div>
 				<a href="'.$board['imageDir'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$threadOP['tw'].'" height="'.$threadOP['th'].'" class="postimg" alt="'.$threadOP['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>' ;
     if($threadOP['fname'] == '') $fileDisplay = ''; // don't display file stuffz if there's no file (for textboard)
