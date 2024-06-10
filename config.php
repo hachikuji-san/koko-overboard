@@ -6,6 +6,7 @@ return $conf = [
     'toplinks' => 'toplinks.txt',
     
     'threadsPerPage' => 10,
+    'totalThreadsPerBoard' => 20,
     
     'thumbExt' => '.png',
     
