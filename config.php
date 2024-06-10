@@ -21,8 +21,9 @@ return $conf = [
             'dbname' => 'boarddb',
             'tablename' => 'imglog',
             'boardname' => '/b/',
-            'boardurl' => 'example.com/b/',
-            'imageDir' => 'example.com/b/src/',
+            'boardurl' => 'https://example.com/b/',
+            'imageAddr' => 'https://example.com/b/src/',
+            'imageDir' => '/path/to/image/dir',
         ],
         //add more boards here
     ],
