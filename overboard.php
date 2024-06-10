@@ -116,12 +116,13 @@ function getTotalThreadCount_acrossBoards() {
 }
 
 function getBumpTime($threadNo, $dbBoardDetails) {
-    $treeline = array();
-    $tmpSQL = 'SELECT root FROM '.$dbBoardDetails['dbname'].'.'.$dbBoardDetails['tablename'].' WHERE resto = '.$threadNo;
-    $tree = mysqli_call($tmpSQL, array('Fetch bump time failed', __LINE__));
-    while($rows = $tree->fetch_row()) $treeline[] = $rows[0];
-    $tree->free();
-    return $treeline;
+    $line = mysqli_call('SELECT root FROM '.$dbBoardDetails['dbname'].'.'.$dbBoardDetails['tablename'].' WHERE no = '.intval($threadNo),
+        array('Fetch bump time in thread failed', __LINE__));
+
+    $bumpstr = $line->fetch_row();
+    
+    $line->free();
+    return $bumpstr;
 }
 
 //used for checking if image exists or not
@@ -169,10 +170,8 @@ function prepareComment($comment, $dbBoarDetails) {
 
 //sort threads by bump time (callback)
 function sortByBump($thrXobj, $thrYobj) {
-   //get bump time from threads 
     $thrXBumpTime = getBumpTime($thrXobj->getThread(), $thrXobj->getBoard());
     $thrYBumpTime = getBumpTime($thrYobj->getThread(), $thrYobj->getBoard());
-    
     if($thrXBumpTime == $thrYBumpTime) return 0; //they are the same
     if($thrXBumpTime > $thrYBumpTime) return -1; //X bump time is bigger than Y therefore it goes at the top of the list
     if($thrXBumpTime < $thrYBumpTime) return 1;
