@@ -276,9 +276,12 @@ function drawPost(array $postData, $board) {
         &gt;&gt;
         </td>
         <td class="post reply" id="p'.$uid.'">
-        <div class="postinfo"><label><big class="title"><b>'.$postData['sub'].'</b></big> <span class="name"><b>'.$postData['name'].'</b></span> <span class="time">'.$postData['now'].'</span></label>
+        <div class="postinfo"><label>
+            <big class="title">
+            <b>'.$postData['sub'].'</b></big> <span class="name"><b>'.$postData['name'].'</b></span> <span class="time">'.$postData['now'].'</span></label>
         <nobr><span class="postnum">
-        <a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a> <nobr>
+        <a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a> 
+        </nobr>
         </div>
         <blockquote class="comment">'.$postData['com'].'</blockquote>
         </td>
@@ -287,23 +290,23 @@ function drawPost(array $postData, $board) {
         $shortendImageName = $postData['fname'];
         (isUrlValid($board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageDir'].$postData['tim'].$postData['ext'];
         if(strlen($postData['fname']) > 20) $shortendImageName = substr($postData['fname'], 0, 35).'(...)';
-        echo '<tr>
-        <td class="doubledash" valign="top">
-        &gt;&gt;
-        </td>
-        <td class="post reply" id="p'.$uid.'">
-        <div class="postinfo"><big class="title"><b>'.$postData['sub'].'</b></big> <span class="name"><b>'.$postData['name'].'</b></span> <span class="time">'.$postData['now'].'</span></label>
-        <nobr><span class="postnum">
-        <nobr>
-        <a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a> 
-        </div>
-        <div class="filesize">
-            File: <a href="'.$board['imageDir'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$postData['fname'].$postData['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageName.$postData['ext'].'\'"> '.$shortendImageName.$postData['ext'].'</a>
-                <a href="'.$board['imageDir'].$postData['tim'].$postData['ext'].'" download="'.$postData['fname'].'"><div class="download"></div></a> <small>('.$postData['imgsize'].', '.$postData['imgw'].'x'.$postData['imgh'].')</small></div>
-        <a href="'.$board['imageDir'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$postData['tw'].'" height="'.$postData['th'].'" class="postimg" alt="'.$postData['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>  </small>       
-        <blockquote class="comment">'.$postData['com'].'</blockquote>
-        </td>
-        </tr>';
+        echo '
+            <tr>
+					<td class="doubledash" valign="top">
+						&gt;&gt;
+					</td>
+					<td class="post reply" id="p'.$postData['no'].'">
+						<div class="postinfo"><label><input type="checkbox" name="'.$postData['no'].'" value="delete">
+                            <big class="title"><b>'.$postData['sub'].'</b></big> 
+                                <span class="name"><b>'.$postData['name'].'</b></span> <span class="time">'.$postData['now'].'</span></label>
+							<nobr><span class="postnum">
+									<a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a> </span></nobr>
+						</div>
+						<div class="filesize">File: <a href="'.$board['imageDir'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$shortendImageName.'\';" onmouseout="this.textContent=\''.$postData['fname'].$postData['ext'].'\'">'.$postData['fname'].$postData['ext'].'</a> <a href="'.$imgDisplayURL.'" download="'.$imgDisplayURL.'"><div class="download"></div></a> <small>('.$postData['imgsize'].', '.$postData['imgw'].'x'.$postData['imgh'].')</small> </div>
+						<a href="'.$board['imageDir'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$postData['tw'].'" height="'.$postData['th'].'" class="postimg" alt="'.$postData['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>
+						<blockquote class="comment">'.$postData['com'].'</blockquote>			
+					</td>
+				</tr>';
     }
     echo '</table></tbody>'; //end thread post preview
 }
