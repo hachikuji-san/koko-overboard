@@ -249,7 +249,7 @@ function drawPageingBar($page=1){
     global $conf;
     global $boardlist;
     
-    $threadCount = sizeof($boardlist) * $conf['totalThreadsPerBoard']; //get thread count across boards
+    $threadCount =  getTotalThreadCount_acrossBoards(); //get thread count across boards
     $pages = ceil($threadCount / $conf['threadsPerPage']) + 1;
    
     //'next by default'
@@ -399,7 +399,7 @@ function drawOverBoardThreads($page = 1) {
        foreach($boardlist as $board) {
             $preparedOPs = array(); // thread -> boardThread
     
-            foreach(getThreadList($board, 0, $conf['totalThreadsPerBoard']) as $thread) {     
+            foreach(getThreadList($board) as $thread) {     
                 $threadBoardPair = new boardThread($thread, $board);
                 array_push($preparedOPs, $threadBoardPair);
             }
