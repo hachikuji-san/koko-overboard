@@ -276,7 +276,7 @@ function drawBoardFilterForm() {
     echo '<center>
             <table>
                 <tbody>
-                    <td><details class="reply"> <summary>Boards</summary>
+                    <td><details class="reply"> <summary style="cursor: pointer">Boards</summary>
                         <form action='.$_SERVER['PHP_SELF'].' method="POST">
                         '; 
                             $boardCheckList(); 
