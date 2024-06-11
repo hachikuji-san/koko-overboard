@@ -10,7 +10,7 @@ $dbDetails = $conf['dbInfo'];
 
 /* board filter cookie */
 $filterCookie = [
-    'blackListed' => array(), //empty
+    'blacklist' => array(), //empty
 ];
 
 //db connection
@@ -171,6 +171,18 @@ function sortByBump($thrXobj, $thrYobj) {
     return -1; // otherwise thread bump time is smaller so it goes down
 }
 
+function drawErrorPageAndExit_headless($mes1,$mes2=""){
+    global $conf;
+    echo '
+    <hr>
+    <center>
+        <strong>'.$mes1.'</strong><br>
+        <p>'.$mes2.'</p>
+    </center>';
+    drawFooter();
+    exit;
+}
+
 function drawHeader() {
     global $conf;
     echo '
@@ -222,13 +234,43 @@ function drawFooter() {
         - <a rel="nofollow noreferrer license" href="https://web.archive.org/web/20150701123900/http://php.s3.to/" target="_blank">GazouBBS</a> + <a rel="nofollow noreferrer license" href="http://www.2chan.net/" target="_blank">futaba</a> + <a rel="nofollow noreferrer license" href="https://pixmicat.github.io/" target="_blank">Pixmicat!</a> + <a rel="nofollow noreferrer license" href="https://github.com/Heyuri/kokonotsuba/" target="_blank">Kokonotsuba</a> -
         </center>';
 }
-
+//handle cookies for board filtering
+function onBoardFilterSubmit() {
+    global $conf;
+    global $boardlist;
+    global $filterCookie;
+    
+    if(sizeof($boardlist))
+    $boardConfList = $conf['boards'];
+    foreach($boardConfList as $board) {
+        $boardToPush = array_search($board['dbname'].$board['tablename'], $_POST);
+        if($boardToPush == null) {
+            unset($boardlist[key($boardlist)]);
+            array_push($filterCookie['blacklist'], $board['dbname'].$board['tablename']);
+            setcookie("blacklist", json_encode($filterCookie['blacklist']),time()+365*24*3600);
+        } else {
+            array_push($boardlist, $board);
+            $boardToDelete = array_search($board['dbname'].$board['tablename'], $filterCookie['blacklist']);
+            unset($filterCookie[$boardToDelete]);
+            setcookie("blacklist", json_encode($filterCookie['blacklist']),time()+365*24*3600);
+        }
+    }
+    header('Location: '.$_SERVER['PHP_SELF']);
+    die;
+}
 function drawBoardFilterForm() {
     $boardCheckList = function() {
+        global $conf;
         global $boardlist;
-        $dat = '';
-        foreach($boardlist as $board) {
-            $dat .= '<input type="checkbox" id="vehicle1" name="" value="boardnjame"> <label for="vehicle1"> a board</label><br>';
+        global $filterCookie;
+        $boardConfList = $conf['boards'];
+        if(!isset($_COOKIE['blacklist'])) $blacklist = $filterCookie['blacklist']; 
+        else $blacklist = json_decode($_COOKIE['blacklist']);
+        
+        foreach($boardConfList as $board) {
+            $checked = '';
+            if(!in_array($board['dbname'].$board['tablename'], $blacklist)) $checked = 'checked';
+            echo '<input type="checkbox" id="'.$board['boardname'].'" name="'.$board['boardname'].'" value="'.$board['dbname'].$board['tablename'].'" '.$checked.'> <label for="'.$board['boardname'].'"> '.$board['boardname'].'</label>';
         }
     };
     echo '<center>
@@ -236,7 +278,11 @@ function drawBoardFilterForm() {
                 <tbody>
                     <td><details class="reply"> <summary>Boards</summary>
                         <form action='.$_SERVER['PHP_SELF'].' method="POST">
-                        '.$boardCheckList.'
+                        '; 
+                            $boardCheckList(); 
+                        echo '
+                          <input type="hidden" name="filter" value="1">
+                          <input type="submit" value="Submit">
                         </form>
                         </details>
                     </td>
@@ -247,17 +293,31 @@ function drawBoardFilterForm() {
 
 function drawPageingBar($page=1){
     global $conf;
-    global $boardlist;
+   
     
-    $threadCount =  getTotalThreadCount_acrossBoards(); //get thread count across boards
-    $pages = ceil($threadCount / $conf['threadsPerPage']) + 1;
+    
+    $threadCount = function() {  //get thread count across boards selected
+        global $boardlist;
+        global $filterCookie;
+        if(!isset($_COOKIE['blacklist'])) $blacklist = $filterCookie['blacklist'];
+        else $blacklist = json_decode($_COOKIE['blacklist']);
+        
+        $finalCount = 0;
+  
+        foreach($boardlist as $board) {
+            if(in_array($board['dbname'].$board['tablename'], $blacklist)) continue;
+            $finalCount += getTotalThreadCount($board);
+        }
+        return $finalCount;
+    };
+    $pages = ceil($threadCount() / $conf['threadsPerPage']) + 1;
    
     //'next by default'
     $rightbutton = '<td><form action="'.$_SERVER['PHP_SELF'].'" method="get"><div>  <input type="hidden" name="page" value="'.($page+1).'">  <input type="submit" value="Next"></div></form></td>'; //will go forward by one
     $leftbutton = '<td><form action="'.$_SERVER['PHP_SELF'].'" method="get"><div> <input type="hidden" name="page" value="'.($page-1).'"> <input type="submit" value="Back"></div></form></td>'; //will go back by one
     if($page == 1 || $page < 1) $leftbutton = '<td> [First] </td>';
     if($page >=  $pages || $page == $pages-1) $rightbutton = '<td> [Last] </td>';
- 
+    
     
     echo '<table id="pager" border="1" ><tbody><tr>'.$leftbutton.'<td>'; //start pager
     for($i = 1; $i < $pages; $i++) {
@@ -387,18 +447,21 @@ function drawThread(boardThread $thread) {
 function drawOverBoardThreads($page = 1) {
         global $boardlist;
         global $conf;
-        $threads = array(); //threads across boards sorted by bump time
-        
+        global $filterCookie;
+        $threads = array(); //thread-s across boards sorted by bump time
+
+        if(!isset($_COOKIE['blacklist'])) $blacklist = $filterCookie['blacklist']; 
+        else $blacklist = json_decode($_COOKIE['blacklist']);
         $count = $conf['threadsPerPage'];
         
         $lineOffset = $count * $page;
         
-        $currentLine = 0;
+        $currentLine = 0;       
 
         //get threads
        foreach($boardlist as $board) {
             $preparedOPs = array(); // thread -> boardThread
-    
+            if(in_array($board['dbname'].$board['tablename'], $blacklist)) continue;
             foreach(getThreadList($board) as $thread) {     
                 $threadBoardPair = new boardThread($thread, $board);
                 array_push($preparedOPs, $threadBoardPair);
@@ -425,12 +488,15 @@ function drawOverBoardThreads($page = 1) {
         
 }
 
+if(isset($_POST['filter']))
+    onBoardFilterSubmit();
+    
 if(isset($_GET['page'])){
     if($_GET['page'] == 0) //stops it from going out of range
         $_GET['page'] = 1;
     $page = $_GET['page'];
     drawHeader();
-//    drawBoardFilterForm();
+    drawBoardFilterForm();
     drawOverboardThreads($page);
     drawPageingBar($page);
     drawFooter();
@@ -439,7 +505,7 @@ if(isset($_GET['page'])){
 }
 
 drawHeader();
-//drawBoardFilterForm();
+drawBoardFilterForm();
 drawOverboardThreads();
 drawPageingBar(1);
 drawFooter();
