@@ -270,13 +270,13 @@ function drawBoardFilterForm() {
         foreach($boardConfList as $board) {
             $checked = '';
             if(!in_array($board['dbname'].$board['tablename'], $blacklist)) $checked = 'checked';
-            echo '<input type="checkbox" id="'.$board['boardname'].'" name="'.$board['boardname'].'" value="'.$board['dbname'].$board['tablename'].'" '.$checked.'><label for="'.$board['boardname'].'" style="cursor: pointer; display: inline-block; "> '.$board['boardname'].'</label>&nbsp;';
+            echo '<span> <input type="checkbox" id="'.$board['boardname'].'" name="'.$board['boardname'].'" value="'.$board['dbname'].$board['tablename'].'" '.$checked.'><label for="'.$board['boardname'].'" style="cursor: pointer; display: inline-block; "> '.$board['boardname'].'</label></span>&nbsp;';
         }
     };
     echo '<center>
             <table>
                 <tbody>
-                    <td><details class="reply" style="max-width:400px;"> <summary style="cursor: pointe;  padding: 3px 3px 3px 3px;r">Boards</summary>
+                    <td><details class="reply"> <summary style="cursor: pointe; padding: 3px 3px 3px 3px;r">Boards</summary>
                         <form action='.$_SERVER['PHP_SELF'].' method="POST">
                         '; 
                             $boardCheckList(); 
