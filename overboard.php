@@ -411,7 +411,7 @@ function drawThread(boardThread $thread) {
         echo  '<b><a href=\''.$board['boardurl'].'\'> '.$thread->getBoard()['boardname'].' </a></b><br>
 			<div class="post op" id="p'.$threadOP['no'].'">
 				'.$fileDisplay.'
-				<span class="postinfo"><label><big class="title"><b>'.$threadOP['sub'].'</b></big> <span class="name"><b>'.$threadOP['name'].'</b></span> <span class="time">'.$threadOP['root'].'</span></label>
+				<span class="postinfo"><label><big class="title"><b>'.$threadOP['sub'].'</b></big> <span class="name"><b>'.$threadOP['name'].'</b></span> <span class="time">'.$threadOP['now'].'</span></label>
 					<nobr><span class="postnum">
 							<a href="'.$board['boardurl'].'koko.php?res='.$threadOP['no'].'#p'.$threadOP['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$threadOP['no'].'&amp;q='.$threadOP['no'].'#postform" title="Quote">'.$threadOP['no'].'</a> </span> [<a href="'.$board['boardurl'].'koko.php?res='.$threadOP['no'].'">Reply</a>]</nobr>
 					<small><i class="backlinks"></i></small>
@@ -421,7 +421,7 @@ function drawThread(boardThread $thread) {
         echo '<b><a href=\''.$board['boardurl'].'\'> '.$board['boardname'].' </a></b><br>
 			<div class="post op" id="p'.$threadOP['no'].'">
 				'.$fileDisplay.'
-				<span class="postinfo"><label><big class="title"><b>'.$threadOP['sub'].'</b></big> <span class="name"><b><a href="mailto:'.$threadOP['email'].'">'.$threadOP['name'].'</a></b></span> <span class="time">'.$threadOP['root'].'</span></label>
+				<span class="postinfo"><label><big class="title"><b>'.$threadOP['sub'].'</b></big> <span class="name"><b><a href="mailto:'.$threadOP['email'].'">'.$threadOP['name'].'</a></b></span> <span class="time">'.$threadOP['now'].'</span></label>
 					<nobr><span class="postnum">
 							<a href="'.$board['boardurl'].'koko.php?res='.$threadOP['no'].'#p'.$threadOP['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$threadOP['no'].'&amp;q='.$threadOP['no'].'#postform" title="Quote">'.$threadOP['no'].'</a> </span> [<a href="'.$board['boardurl'].'koko.php?res='.$threadOP['no'].'">Reply</a>]</nobr>
 					<small><i class="backlinks"></i></small>
