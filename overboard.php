@@ -32,11 +32,16 @@ function mysqli_call($query, $errarray=false) {
 class boardThread {
     private $board = 'placeholder'; // plaintext board name
     private $thread = 'placeholder'; // thread number
+    private $root = 'placeholder'; // bump time
+    
     public function getBoard() {
         return $this->board;
     }
     public function getThread() {
         return $this->thread;
+    }
+    public function getRoot() {
+        return $this->root;
     }
     
     public function setBoard($board) {
@@ -45,9 +50,14 @@ class boardThread {
     public function setThread($thread) {
         $this->thread = $thread;
     }
-    public function __construct($thread, $board) {
+    public function setRoot($root) {
+        $this->root = $root;
+    }
+    
+    public function __construct($thread, $board, $root) {
         $this->thread = $thread;
         $this->board = $board;
+        $this->root = $root;
     }
 }
 
@@ -89,14 +99,13 @@ function fetchPostList($resno, $dbBoardDetails, $start=0, $amount=0, $host=0){
 
 /* Output discussion thread list */
 function getThreadList($dbBoardDetails, $start=0, $amount=0, $isDESC=false){
-    global $con;
-
+    
     $start = intval($start); $amount = intval($amount);
     $treeline = array();
-    $tmpSQL = 'SELECT no FROM '.$dbBoardDetails['dbname'].'.'.$dbBoardDetails['tablename'].' WHERE resto = 0 ORDER BY '.($isDESC ? 'no' : 'root').' DESC';
+    $tmpSQL = 'SELECT no,root FROM '.$dbBoardDetails['dbname'].'.'.$dbBoardDetails['tablename'].' WHERE resto = 0 ORDER BY '.($isDESC ? 'no' : 'root').' DESC';
     if($amount) $tmpSQL .= " LIMIT {$start}, {$amount}"; // Use only when there is a specified quantity LIMIT
     $tree = mysqli_call($tmpSQL, array('Fetch thread list failed', __LINE__));
-    while($rows = $tree->fetch_row()) $treeline[] = $rows[0];
+    while($rows = $tree->fetch_row()) $treeline[] = new boardThread($rows[0], $dbBoardDetails, $rows[1]);
     $tree->free();
     return $treeline;
 }
@@ -162,8 +171,8 @@ function prepareComment($comment, $dbBoarDetails) {
 
 //sort threads by bump time (callback)
 function sortByBump($thrXobj, $thrYobj) {
-    $thrXBumpTime = getBumpTime($thrXobj->getThread(), $thrXobj->getBoard());
-    $thrYBumpTime = getBumpTime($thrYobj->getThread(), $thrYobj->getBoard());
+    $thrXBumpTime = $thrXobj->getRoot();
+    $thrYBumpTime = $thrYobj->getRoot();
     if($thrXBumpTime == $thrYBumpTime) return 0; //they are the same
     if($thrXBumpTime > $thrYBumpTime) return -1; //X bump time is bigger than Y therefore it goes at the top of the list
     if($thrXBumpTime < $thrYBumpTime) return 1;
@@ -459,13 +468,9 @@ function drawOverBoardThreads($page = 1) {
         $currentLine = 0;       
 
         //get threads
-       foreach($boardlist as $board) {
-            $preparedOPs = array(); // thread -> boardThread
+        foreach($boardlist as $board) {
             if(in_array($board['dbname'].$board['tablename'], $blacklist)) continue;
-            foreach(getThreadList($board) as $thread) {     
-                $threadBoardPair = new boardThread($thread, $board);
-                array_push($preparedOPs, $threadBoardPair);
-            }
+            $preparedOPs = getThreadList($board); // thread -> boardThread
             array_push($threads, $preparedOPs);
         }
         //sort by bump time
