@@ -354,7 +354,7 @@ function drawPost(array $postData, $board) {
         <td class="doubledash" valign="top">
         &gt;&gt;
         </td>
-        <td class="post reply" id="p'.$postData['no'].'">
+        <td class="post reply" id="p'.$board['tablename'].$postData['no'].'">
         <div class="postinfo"><label>
             <big class="title">
             <b>'.$postData['sub'].'</b></big> <span class="name"><b>'.$postData['name'].'</b></span> <span class="time">'.$postData['now'].'</span></label>
@@ -373,7 +373,7 @@ function drawPost(array $postData, $board) {
 					<td class="doubledash" valign="top">
 						&gt;&gt;
 					</td>
-					<td class="post reply" id="p'.$postData['no'].'">
+					<td class="post reply" id="p'.$board['tablename'].$postData['no'].'">
 						<div class="postinfo"><label>
                             <big class="title"><b>'.$postData['sub'].'</b></big> 
                                 <span class="name"><b>'.$postData['name'].'</b></span> <span class="time">'.$postData['now'].'</span></label>
@@ -409,7 +409,7 @@ function drawThread(boardThread $thread) {
     if($threadOP['fname'] == '') $fileDisplay = ''; // don't display file stuffz if there's no file (for textboard)
     if($threadOP['email'] == 'noko' || !isset($threadOP['email']) || $threadOP['email'] == '') {
         echo  '<b><a href=\''.$board['boardurl'].'\'> '.$thread->getBoard()['boardname'].' </a></b><br>
-			<div class="post op" id="p'.$threadOP['no'].'">
+			<div class="post op" id="p'.$board['tablename'].$threadOP['no'].'">
 				'.$fileDisplay.'
 				<span class="postinfo"><label><big class="title"><b>'.$threadOP['sub'].'</b></big> <span class="name"><b>'.$threadOP['name'].'</b></span> <span class="time">'.$threadOP['now'].'</span></label>
 					<nobr><span class="postnum">
@@ -418,7 +418,7 @@ function drawThread(boardThread $thread) {
 				</span>
 				<blockquote class="comment">'.$threadOP['com'].'</blockquote></div>';
     } else {
-        echo '<b><a href=\''.$board['boardurl'].'\'> '.$board['boardname'].' </a></b><br>
+        echo '<b><a href=\''.$board['boardurl'].'\'> '.$board['tablename'].$board['boardname'].' </a></b><br>
 			<div class="post op" id="p'.$threadOP['no'].'">
 				'.$fileDisplay.'
 				<span class="postinfo"><label><big class="title"><b>'.$threadOP['sub'].'</b></big> <span class="name"><b><a href="mailto:'.$threadOP['email'].'">'.$threadOP['name'].'</a></b></span> <span class="time">'.$threadOP['now'].'</span></label>
