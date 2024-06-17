@@ -214,6 +214,15 @@ function drawHeader() {
 	<script type="text/javascript" src="js/style.js"></script>
 	<script type="text/javascript" src="js/img.js"></script>
 	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+ 	<style>
+  		.boardFilterItem {
+    			display: inline-block;
+    		}
+      
+		.boardFilterItem label {
+			cursor: pointer;
+   		}
+  	</style>
 
 	<!--&TOPLINKS-->
 	<div class="boardlist">
@@ -279,7 +288,7 @@ function drawBoardFilterForm() {
         foreach($boardConfList as $board) {
             $checked = '';
             if(!in_array($board['dbname'].$board['tablename'], $blacklist)) $checked = 'checked';
-            echo '<span> <input type="checkbox" id="'.$board['boardname'].'" name="'.$board['boardname'].'" value="'.$board['dbname'].$board['tablename'].'" '.$checked.'><label for="'.$board['boardname'].'" style="cursor: pointer; display: inline-block; "> '.$board['boardname'].'</label></span>&nbsp;';
+            echo '<span class="boardFilterItem"> <input type="checkbox" id="'.$board['boardname'].'" name="'.$board['boardname'].'" value="'.$board['dbname'].$board['tablename'].'" '.$checked.'><label for="'.$board['boardname'].'"> '.$board['boardname'].'</label></span>&nbsp;';
         }
     };
     echo '<center>
