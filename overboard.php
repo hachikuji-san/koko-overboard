@@ -378,6 +378,8 @@ function drawPost(array $postData, $board) {
         (file_exists($board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageAddr'].$postData['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageAddr'].$postData['tim'].$postData['ext'];
         if($postData['ext'] == '.swf') $imgDisplayURL = 'static/image/swf_thumb.png';
         if(strlen($postData['fname']) > 35) $shortendImageName = substr($postData['fname'], 0, 35).'(...)'; else $shortendImageName = $postData['fname'].$postData['ext'];
+        $fnameJS = str_replace('&#039;', '\&#039;', $postData['fname']);
+        $shortendImageNameJS = str_replace('&#039;', '\&#039;', $shortendImageName);
         echo '
             <tr>
 					<td class="doubledash" valign="top">
@@ -390,7 +392,7 @@ function drawPost(array $postData, $board) {
 							<nobr><span class="postnum">
 									<a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a> </span></nobr>
 						</div>
-						<div class="filesize">File: <a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$postData['fname'].$postData['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageName.'\'">'.$shortendImageName.'</a> <a href="'.$imgDisplayURL.'" download="'.$imgDisplayURL.'"><div class="download"></div></a> <small>('.$postData['imgsize'].', '.$postData['imgw'].'x'.$postData['imgh'].')</small> </div>
+						<div class="filesize">File: <a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$fnameJS.$postData['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageNameJS.'\'">'.$shortendImageName.'</a> <a href="'.$imgDisplayURL.'" download="'.$imgDisplayURL.'"><div class="download"></div></a> <small>('.$postData['imgsize'].', '.$postData['imgw'].'x'.$postData['imgh'].')</small> </div>
 						<a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$postData['tw'].'" height="'.$postData['th'].'" class="postimg" alt="'.$postData['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>
 						    
                         <blockquote class="comment">'.$postData['com'].'</blockquote>
@@ -402,9 +404,9 @@ function drawPost(array $postData, $board) {
 
 function drawThread(boardThread $thread) {
     global $conf;
-    $threadOP = array_merge(...getPostData($thread->getThread(), $thread->getBoard()));
-    
+    $threadOP = array_merge(...getPostData($thread->getThread(), $thread->getBoard()));   
     $board = $thread->getBoard();
+
     $shortendImageName = $threadOP['fname']; //used for onmouse event
     //for OP
     if(strlen($threadOP['fname']) > 35) $shortendImageName = substr($threadOP['fname'], 0, 35).'(...)';
@@ -416,7 +418,10 @@ function drawThread(boardThread $thread) {
     (file_exists($board['imageDir'].$threadOP['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageAddr'].$threadOP['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageAddr'].$threadOP['tim'].$threadOP['ext'];
     if($threadOP['ext'] == '.swf')  $imgDisplayURL = 'static/image/swf_thumb.png';
 
-    $fileDisplay = '<div class="filesize">File: <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$threadOP['fname'].$threadOP['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageName.$threadOP['ext'].'\'"> '.$shortendImageName.$threadOP['ext'].'</a> <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" download="'.$threadOP['fname'].'"><div class="download"></div></a> <small>('.$threadOP['imgsize'].', '.$threadOP['imgw'].'x'.$threadOP['imgh'].')</small></div>
+    $fnameJS = str_replace('&#039;', '\&#039;', $threadOP['fname']);
+    $shortendImageNameJS = str_replace('&#039;', '\&#039;', $shortendImageName);
+    
+    $fileDisplay = '<div class="filesize">File: <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$fnameJS.$threadOP['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageNameJS.$threadOP['ext'].'\'"> '.$shortendImageName.$threadOP['ext'].'</a> <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" download="'.$threadOP['fname'].'"><div class="download"></div></a> <small>('.$threadOP['imgsize'].', '.$threadOP['imgw'].'x'.$threadOP['imgh'].')</small></div>
 				<a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$threadOP['tw'].'" height="'.$threadOP['th'].'" class="postimg" alt="'.$threadOP['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>' ;
     if($threadOP['ext'] == '') $fileDisplay = ''; // don't display file stuffz if there's no file (for textboard)
     if($threadOP['email'] == 'noko' || !isset($threadOP['email']) || $threadOP['email'] == '') {
