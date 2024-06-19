@@ -342,7 +342,7 @@ function drawPageingBar($page=1){
         if($i == $page){
             echo '[<b>'.$i.'</b>]';
         }else{
-            echo ' [<a href="'.$_SERVER['PHP_SELF'].'?page='.$i.'">'.$i.'</a>]';
+            echo ' [<a href="'.$_SERVER['PHP_SELF'].'?page='.$i.'">'.$i.'</a>] ';
         }
     }
     
