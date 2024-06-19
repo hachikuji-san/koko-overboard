@@ -377,7 +377,7 @@ function drawPost(array $postData, $board) {
         $shortendImageName = $postData['fname'];
         (file_exists($board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageAddr'].$postData['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageAddr'].$postData['tim'].$postData['ext'];
         if($postData['ext'] == '.swf') $imgDisplayURL = 'static/image/swf_thumb.png';
-        if(strlen($postData['fname']) > 35) $shortendImageName = substr($postData['fname'], 0, 35).'(...)'; else $shortendImageName = $postData['fname'].$postData['ext'];
+        if(strlen($postData['fname']) > 35) $shortendImageName = substr($postData['fname'], 0, 35).'(...)'.$postData['ext']; else $shortendImageName = $postData['fname'].$postData['ext'];
         $fnameJS = str_replace('&#039;', '\&#039;', $postData['fname']);
         $shortendImageNameJS = str_replace('&#039;', '\&#039;', $shortendImageName);
         echo '
@@ -409,7 +409,7 @@ function drawThread(boardThread $thread) {
 
     $shortendImageName = $threadOP['fname']; //used for onmouse event
     //for OP
-    if(strlen($threadOP['fname']) > 35) $shortendImageName = substr($threadOP['fname'], 0, 35).'(...)';
+    if(strlen($threadOP['fname']) > 35) $shortendImageName = substr($threadOP['fname'], 0, 35).'(...)'.$threadOP['ext'];
     $threadOP['com'] = prepareComment($threadOP['com'], $board);
     
     //begin thread div
