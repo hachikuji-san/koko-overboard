@@ -355,10 +355,10 @@ function drawPost(array $postData, $board) {
     
     //prepare comment for drawing
     $postData['com'] = prepareComment($postData['com'], $board);
-
+    
     echo '<table><tbody>'; //begin thread post preview
     //imageless post
-    if($postData['fname'] == '') {
+    if($postData['ext'] == '') {
         echo '<tr>
         <td class="doubledash" valign="top">
         &gt;&gt;
@@ -368,7 +368,7 @@ function drawPost(array $postData, $board) {
             <big class="title">
             <b>'.$postData['sub'].'</b></big> <span class="name"><b>'.$postData['name'].'</b></span> <span class="time">'.$postData['now'].'</span></label>
         <nobr><span class="postnum">
-        <a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a> 
+        <a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a>
         </nobr></div>
         <blockquote class="comment">'.$postData['com'].'</blockquote>
         </td>
@@ -376,7 +376,8 @@ function drawPost(array $postData, $board) {
     } else {
         $shortendImageName = $postData['fname'];
         (file_exists($board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageAddr'].$postData['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageAddr'].$postData['tim'].$postData['ext'];
-        if(strlen($postData['fname']) > 20) $shortendImageName = substr($postData['fname'], 0, 35).'(...)'; else $shortendImageName = $postData['fname'].$postData['ext'];
+        if($postData['ext'] == '.swf') $imgDisplayURL = 'static/image/swf_thumb.png';
+        if(strlen($postData['fname']) > 35) $shortendImageName = substr($postData['fname'], 0, 35).'(...)'; else $shortendImageName = $postData['fname'].$postData['ext'];
         echo '
             <tr>
 					<td class="doubledash" valign="top">
@@ -384,15 +385,15 @@ function drawPost(array $postData, $board) {
 					</td>
 					<td class="post reply" id="p'.$board['tablename'].$postData['no'].'">
 						<div class="postinfo"><label>
-                            <big class="title"><b>'.$postData['sub'].'</b></big> 
+                            <big class="title"><b>'.$postData['sub'].'</b></big>
                                 <span class="name"><b>'.$postData['name'].'</b></span> <span class="time">'.$postData['now'].'</span></label>
 							<nobr><span class="postnum">
 									<a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a> </span></nobr>
 						</div>
 						<div class="filesize">File: <a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$postData['fname'].$postData['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageName.'\'">'.$shortendImageName.'</a> <a href="'.$imgDisplayURL.'" download="'.$imgDisplayURL.'"><div class="download"></div></a> <small>('.$postData['imgsize'].', '.$postData['imgw'].'x'.$postData['imgh'].')</small> </div>
 						<a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$postData['tw'].'" height="'.$postData['th'].'" class="postimg" alt="'.$postData['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>
-						
-                        <blockquote class="comment">'.$postData['com'].'</blockquote>			
+						    
+                        <blockquote class="comment">'.$postData['com'].'</blockquote>
 					</td>
 				</tr>';
     }
@@ -406,16 +407,18 @@ function drawThread(boardThread $thread) {
     $board = $thread->getBoard();
     $shortendImageName = $threadOP['fname']; //used for onmouse event
     //for OP
-    if(strlen($threadOP['fname']) > 20) $shortendImageName = substr($threadOP['fname'], 0, 35).'(...)';
+    if(strlen($threadOP['fname']) > 35) $shortendImageName = substr($threadOP['fname'], 0, 35).'(...)';
     $threadOP['com'] = prepareComment($threadOP['com'], $board);
     
     //begin thread div
     echo '<div class="thread" id="t'.$threadOP['no'].'">';
     //draw thread OP
     (file_exists($board['imageDir'].$threadOP['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageAddr'].$threadOP['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageAddr'].$threadOP['tim'].$threadOP['ext'];
+    if($threadOP['ext'] == '.swf')  $imgDisplayURL = 'static/image/swf_thumb.png';
+
     $fileDisplay = '<div class="filesize">File: <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$threadOP['fname'].$threadOP['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageName.$threadOP['ext'].'\'"> '.$shortendImageName.$threadOP['ext'].'</a> <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" download="'.$threadOP['fname'].'"><div class="download"></div></a> <small>('.$threadOP['imgsize'].', '.$threadOP['imgw'].'x'.$threadOP['imgh'].')</small></div>
 				<a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$threadOP['tw'].'" height="'.$threadOP['th'].'" class="postimg" alt="'.$threadOP['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>' ;
-    if($threadOP['fname'] == '') $fileDisplay = ''; // don't display file stuffz if there's no file (for textboard)
+    if($threadOP['ext'] == '') $fileDisplay = ''; // don't display file stuffz if there's no file (for textboard)
     if($threadOP['email'] == 'noko' || !isset($threadOP['email']) || $threadOP['email'] == '') {
         echo  '<b><a href=\''.$board['boardurl'].'\'> '.$thread->getBoard()['boardname'].' </a></b><br>
 			<div class="post op" id="p'.$board['tablename'].$threadOP['no'].'">
@@ -456,8 +459,8 @@ function drawThread(boardThread $thread) {
             drawPost($postData, $board);
         }
     }
-	
-
+    
+    
     echo '</div>'; // end of thread preview
     //do something
 }
