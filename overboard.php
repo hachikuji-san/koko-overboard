@@ -425,7 +425,7 @@ function drawThread(boardThread $thread) {
 				<a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$threadOP['tw'].'" height="'.$threadOP['th'].'" class="postimg" alt="'.$threadOP['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>' ;
     if($threadOP['ext'] == '') $fileDisplay = ''; // don't display file stuffz if there's no file (for textboard)
     if($threadOP['email'] == 'noko' || !isset($threadOP['email']) || $threadOP['email'] == '') {
-        echo  '<b><a href=\''.$board['boardurl'].'\'> '.$thread->getBoard()['boardname'].' </a></b><br>
+        echo  '<b><a href="'.$board['boardurl'].'"> '.$thread->getBoard()['boardname'].' </a></b><br>
 			<div class="post op" id="p'.$board['tablename'].$threadOP['no'].'">
 				'.$fileDisplay.'
 				<span class="postinfo"><label><big class="title"><b>'.$threadOP['sub'].'</b></big> <span class="name"><b>'.$threadOP['name'].'</b></span> <span class="time">'.$threadOP['now'].'</span></label>
@@ -435,7 +435,7 @@ function drawThread(boardThread $thread) {
 				</span>
 				<blockquote class="comment">'.$threadOP['com'].'</blockquote></div>';
     } else {
-        echo '<b><a href=\''.$board['boardurl'].'\'> '.$board['tablename'].$board['boardname'].' </a></b><br>
+        echo '<b><a href="'.$board['boardurl'].'"> '.$board['boardname'].' </a></b><br>
 			<div class="post op" id="p'.$threadOP['no'].'">
 				'.$fileDisplay.'
 				<span class="postinfo"><label><big class="title"><b>'.$threadOP['sub'].'</b></big> <span class="name"><b><a href="mailto:'.$threadOP['email'].'">'.$threadOP['name'].'</a></b></span> <span class="time">'.$threadOP['now'].'</span></label>
