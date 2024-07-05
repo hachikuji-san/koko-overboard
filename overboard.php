@@ -311,8 +311,6 @@ function drawBoardFilterForm() {
 
 function drawPageingBar($page=1){
     global $conf;
-   
-    
     
     $threadCount = function() {  //get thread count across boards selected
         global $boardlist;
@@ -375,9 +373,26 @@ function drawPost(array $postData, $board) {
         </tr>';
     } else {
         $shortendImageName = $postData['fname'];
-        (file_exists($board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageAddr'].$postData['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageAddr'].$postData['tim'].$postData['ext'];
-        if($postData['ext'] == '.swf') $imgDisplayURL = 'static/image/swf_thumb.png';
+        $imgDisplayURL = '';
+        $imgDisplayElement = '';
+        
+        if(file_exists($board['imageDir'].$postData['tim'].'s'.$conf['thumbExt'])) {
+            $imgDisplayURL = $board['imageAddr'].$postData['tim'].'s'.$conf['thumbExt'];
+            $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="'.$postData['tw'].'" height="'.$postData['th'].'" class="postimg" title="Click to show full image" hspace="20" vspace="3" border="0" align="left">';
+        } else if(file_exists($board['imageDir'].$postData['tim'].$postData['ext']) && $postData['ext'] != '.swf') {
+            $imgDisplayURL = $board['imageAddr'].$postData['tim'].$postData['ext'];
+            $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="'.$postData['tw'].'" height="'.$postData['th'].'" class="postimg" title="Click to show full image" hspace="20" vspace="3" border="0" align="left">'; // stay the same but scaled
+        } else if(!file_exists($board['imageDir'].$postData['tim'].$postData['ext'])) { 
+            $imgDisplayURL = 'static/image/nothumb.gif'; //if neither thumb or full image is found, then it will use the error image
+            $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="200px" height="150px" class="postimg" title="File not found!" hspace="20" vspace="3" border="0" align="left">';
+        } else if($postData['ext'] == '.swf') {
+            $imgDisplayURL = 'static/image/swf_thumb.png';
+            $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="200px" height="200px" class="postimg" title="File not found!" hspace="20" vspace="3" border="0" align="left">';
+        }
         if(strlen($postData['fname']) > 35) $shortendImageName = substr($postData['fname'], 0, 35).'(...)'.$postData['ext']; else $shortendImageName = $postData['fname'].$postData['ext'];
+        
+       
+        
         $fnameJS = str_replace('&#039;', '\&#039;', $postData['fname']);
         $shortendImageNameJS = str_replace('&#039;', '\&#039;', $shortendImageName);
         echo '
@@ -392,8 +407,8 @@ function drawPost(array $postData, $board) {
 							<nobr><span class="postnum">
 									<a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a> </span></nobr>
 						</div>
-						<div class="filesize">File: <a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$fnameJS.$postData['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageNameJS.'\'">'.$shortendImageName.'</a> <a href="'.$imgDisplayURL.'" download="'.$imgDisplayURL.'"><div class="download"></div></a> <small>('.$postData['imgsize'].', '.$postData['imgw'].'x'.$postData['imgh'].')</small> </div>
-						<a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$postData['tw'].'" height="'.$postData['th'].'" class="postimg" alt="'.$postData['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>
+						<div class="filesize">File: <a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$fnameJS.$postData['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageNameJS.'\'">'.$shortendImageName.'</a> <a href="'.$imgDisplayURL.'" download="'.$postData['fname'].$postData['ext'].'"><div class="download"></div></a> <small>('.$postData['imgsize'].', '.$postData['imgw'].'x'.$postData['imgh'].')</small> </div>
+						<a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow">'.$imgDisplayElement.'</a>
 						    
                         <blockquote class="comment">'.$postData['com'].'</blockquote>
 					</td>
@@ -415,14 +430,28 @@ function drawThread(boardThread $thread) {
     //begin thread div
     echo '<div class="thread" id="t'.$threadOP['no'].'">';
     //draw thread OP
-    (file_exists($board['imageDir'].$threadOP['tim'].'s'.$conf['thumbExt'])) ? $imgDisplayURL = $board['imageAddr'].$threadOP['tim'].'s'.$conf['thumbExt'] : $imgDisplayURL = $board['imageAddr'].$threadOP['tim'].$threadOP['ext'];
-    if($threadOP['ext'] == '.swf')  $imgDisplayURL = 'static/image/swf_thumb.png';
+    $imgDisplayURL = '';
+    $imgDisplayElement = '';
+    
+    if(file_exists($board['imageDir'].$threadOP['tim'].'s'.$conf['thumbExt'])) {
+        $imgDisplayURL = $board['imageAddr'].$threadOP['tim'].'s'.$conf['thumbExt'];
+        $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="'.$threadOP['tw'].'" height="'.$threadOP['th'].'" class="postimg" title="Click to show full image" hspace="20" vspace="3" border="0" align="left">';
+    } else if(file_exists($board['imageDir'].$threadOP['tim'].$threadOP['ext'])  && $threadOP['ext'] != '.swf') {
+        $imgDisplayURL = $board['imageAddr'].$threadOP['tim'].$threadOP['ext'];
+        $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="'.$threadOP['tw'].'" height="'.$threadOP['th'].'" class="postimg" title="Click to show full image" hspace="20" vspace="3" border="0" align="left">'; // stay the same but scaled
+    } else if(!file_exists($board['imageDir'].$threadOP['tim'].$threadOP['ext'])) {
+        $imgDisplayURL = 'static/image/nothumb.gif'; //if neither thumb or full image is found, then it will use the error image
+        $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="200px" height="150px" class="postimg" title="File not found!" hspace="20" vspace="3" border="0" align="left">';
+    } else if($threadOP['ext'] == '.swf') {
+        $imgDisplayURL = 'static/image/swf_thumb.png';
+        $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="200px" height="200px" class="postimg" title="File not found!" hspace="20" vspace="3" border="0" align="left">';
+    }
 
     $fnameJS = str_replace('&#039;', '\&#039;', $threadOP['fname']);
     $shortendImageNameJS = str_replace('&#039;', '\&#039;', $shortendImageName);
     
-    $fileDisplay = '<div class="filesize">File: <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$fnameJS.$threadOP['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageNameJS.$threadOP['ext'].'\'"> '.$shortendImageName.$threadOP['ext'].'</a> <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" download="'.$threadOP['fname'].'"><div class="download"></div></a> <small>('.$threadOP['imgsize'].', '.$threadOP['imgw'].'x'.$threadOP['imgh'].')</small></div>
-				<a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow"><img src="'.$imgDisplayURL.'" width="'.$threadOP['tw'].'" height="'.$threadOP['th'].'" class="postimg" alt="'.$threadOP['imgsize'].'" title="Click to show full image" hspace="20" vspace="3" border="0" align="left"></a>' ;
+    $fileDisplay = '<div class="filesize">File: <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$fnameJS.$threadOP['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageNameJS.$threadOP['ext'].'\'"> '.$shortendImageName.$threadOP['ext'].'</a> <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" download="'.$threadOP['fname'].$threadOP['ext'].'"><div class="download"></div></a> <small>('.$threadOP['imgsize'].', '.$threadOP['imgw'].'x'.$threadOP['imgh'].')</small></div>
+				<a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow">'.$imgDisplayElement.'</a>' ;
     if($threadOP['ext'] == '') $fileDisplay = ''; // don't display file stuffz if there's no file (for textboard)
     if($threadOP['email'] == 'noko' || !isset($threadOP['email']) || $threadOP['email'] == '') {
         echo  '<b><a href="'.$board['boardurl'].'"> '.$thread->getBoard()['boardname'].' </a></b><br>
