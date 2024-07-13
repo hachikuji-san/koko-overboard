@@ -364,7 +364,7 @@ function drawPost(array $postData, $board) {
         <td class="post reply" id="p'.$board['tablename'].$postData['no'].'">
         <div class="postinfo"><label>
             <big class="title">
-            <b>'.$postData['sub'].'</b></big> <span class="name"><b>'.$postData['name'].'</b></span> <span class="time">'.$postData['now'].'</span></label>
+            <b>'.$postData['sub'].'</b></big> <span class="name">'.$postData['name'].'</span> <span class="time">'.$postData['now'].'</span></label>
         <nobr><span class="postnum">
         <a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a>
         </nobr></div>
@@ -403,7 +403,7 @@ function drawPost(array $postData, $board) {
 					<td class="post reply" id="p'.$board['tablename'].$postData['no'].'">
 						<div class="postinfo"><label>
                             <big class="title"><b>'.$postData['sub'].'</b></big>
-                                <span class="name"><b>'.$postData['name'].'</b></span> <span class="time">'.$postData['now'].'</span></label>
+                                <span class="name">'.$postData['name'].'</span> <span class="time">'.$postData['now'].'</span></label>
 							<nobr><span class="postnum">
 									<a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a> </span></nobr>
 						</div>
@@ -451,13 +451,13 @@ function drawThread(boardThread $thread) {
     $shortendImageNameJS = str_replace('&#039;', '\&#039;', $shortendImageName);
     
     $fileDisplay = '<div class="filesize">File: <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$fnameJS.$threadOP['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageNameJS.$threadOP['ext'].'\'"> '.$shortendImageName.$threadOP['ext'].'</a> <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" download="'.$threadOP['fname'].$threadOP['ext'].'"><div class="download"></div></a> <small>('.$threadOP['imgsize'].', '.$threadOP['imgw'].'x'.$threadOP['imgh'].')</small></div>
-				<a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow">'.$imgDisplayElement.'</a>' ;
+    <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow">'.$imgDisplayElement.'</a>' ;
     if($threadOP['ext'] == '') $fileDisplay = ''; // don't display file stuffz if there's no file (for textboard)
     if($threadOP['email'] == 'noko' || !isset($threadOP['email']) || $threadOP['email'] == '') {
         echo  '<b><a href="'.$board['boardurl'].'"> '.$thread->getBoard()['boardname'].' </a></b><br>
 			<div class="post op" id="p'.$board['tablename'].$threadOP['no'].'">
 				'.$fileDisplay.'
-				<span class="postinfo"><label><big class="title"><b>'.$threadOP['sub'].'</b></big> <span class="name"><b>'.$threadOP['name'].'</b></span> <span class="time">'.$threadOP['now'].'</span></label>
+				<span class="postinfo"><label><big class="title"><b>'.$threadOP['sub'].'</b></big> <span class="name">'.$threadOP['name'].'</span> <span class="time">'.$threadOP['now'].'</span></label>
 					<nobr><span class="postnum">
 							<a href="'.$board['boardurl'].'koko.php?res='.$threadOP['no'].'#p'.$threadOP['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$threadOP['no'].'&amp;q='.$threadOP['no'].'#postform" title="Quote">'.$threadOP['no'].'</a> </span> [<a href="'.$board['boardurl'].'koko.php?res='.$threadOP['no'].'">Reply</a>]</nobr>
 					<small><i class="backlinks"></i></small>
@@ -467,7 +467,7 @@ function drawThread(boardThread $thread) {
         echo '<b><a href="'.$board['boardurl'].'"> '.$board['boardname'].' </a></b><br>
 			<div class="post op" id="p'.$threadOP['no'].'">
 				'.$fileDisplay.'
-				<span class="postinfo"><label><big class="title"><b>'.$threadOP['sub'].'</b></big> <span class="name"><b><a href="mailto:'.$threadOP['email'].'">'.$threadOP['name'].'</a></b></span> <span class="time">'.$threadOP['now'].'</span></label>
+				<span class="postinfo"><label><big class="title"><b>'.$threadOP['sub'].'</b></big> <span class="name"><a href="mailto:'.$threadOP['email'].'">'.$threadOP['name'].'</a></span> <span class="time">'.$threadOP['now'].'</span></label>
 					<nobr><span class="postnum">
 							<a href="'.$board['boardurl'].'koko.php?res='.$threadOP['no'].'#p'.$threadOP['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$threadOP['no'].'&amp;q='.$threadOP['no'].'#postform" title="Quote">'.$threadOP['no'].'</a> </span> [<a href="'.$board['boardurl'].'koko.php?res='.$threadOP['no'].'">Reply</a>]</nobr>
 					<small><i class="backlinks"></i></small>
