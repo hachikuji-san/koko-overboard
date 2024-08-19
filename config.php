@@ -4,6 +4,7 @@ return $conf = [
     'boardSubTitle' => 'overboard for kokonotsuba boards',
     'home' => "https://example.com/main.php",
     'toplinks' => 'toplinks.txt',
+    'staticURL' => 'www.static.example.org',
     
     'threadsPerPage' => 10,
     'totalThreadsPerBoard' => 20,

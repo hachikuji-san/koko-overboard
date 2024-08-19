@@ -206,13 +206,13 @@ function drawHeader() {
 	<meta name="Berry" content="no" />
 	<title>'.$conf['boardTitle'].'</title>
 	<meta name="robots" content="follow,archive" />
-	<link class="linkstyle" rel="stylesheet" type="text/css" href="static/css/heyuriclassic.css" title="Heyuri Classic" />
-	<link class="linkstyle" rel="stylesheet alternate" type="text/css" href="static/css/futaba.css" title="Futaba" />
-	<link class="linkstyle" rel="stylesheet alternate" type="text/css" href="static/css/oldheyuri.css" title="Sakomoto" />
-	<link rel="shortcut icon" href="static/image/favicon.png" />
-	<script type="text/javascript" src="js/koko.js"></script>
-	<script type="text/javascript" src="js/style.js"></script>
-	<script type="text/javascript" src="js/img.js"></script>
+	<link class="linkstyle" rel="stylesheet" type="text/css" href="'.$conf['staticURL'].'css/heyuriclassic.css" title="Heyuri Classic" />
+	<link class="linkstyle" rel="stylesheet alternate" type="text/css" href="'.$conf['staticURL'].'css/futaba.css" title="Futaba" />
+	<link class="linkstyle" rel="stylesheet alternate" type="text/css" href='.$conf['staticURL'].'css/oldheyuri.css" title="Sakomoto" />
+	<link rel="shortcut icon" href="'.$conf['staticURL'].'image/favicon.png" />
+	<script type="text/javascript" src="'.$conf['staticURL'].'js/koko.js"></script>
+	<script type="text/javascript" src="'.$conf['staticURL'].'js/style.js"></script>
+	<script type="text/javascript" src="'.$conf['staticURL'].'js/img.js"></script>
 	<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
  	<style>
   		.boardFilterItem {
@@ -234,7 +234,7 @@ function drawHeader() {
 	<!--&BODYHEAD-->
 
 <body>
-	<script id="wz_tooltip" type="text/javascript" src="js/wz_tooltip.js"></script>
+	<script id="wz_tooltip" type="text/javascript" src="'.$conf['staticURL'].'js/wz_tooltip.js"></script>
 	<a name="top"></a>
 	<!--&TOPLINKS/-->
 	<center id="header">
@@ -383,10 +383,10 @@ function drawPost(array $postData, $board) {
             $imgDisplayURL = $board['imageAddr'].$postData['tim'].$postData['ext'];
             $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="'.$postData['tw'].'" height="'.$postData['th'].'" class="postimg" title="Click to show full image" hspace="20" vspace="3" border="0" align="left">'; // stay the same but scaled
         } else if(!file_exists($board['imageDir'].$postData['tim'].$postData['ext'])) { 
-            $imgDisplayURL = 'static/image/nothumb.gif'; //if neither thumb or full image is found, then it will use the error image
+            $imgDisplayURL = $conf['staticURL'].'image/nothumb.gif'; //if neither thumb or full image is found, then it will use the error image
             $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="200px" height="150px" class="postimg" title="File not found!" hspace="20" vspace="3" border="0" align="left">';
         } else if($postData['ext'] == '.swf') {
-            $imgDisplayURL = 'static/image/swf_thumb.png';
+            $imgDisplayURL = $conf['staticURL'].'image/swf_thumb.png';
             $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="200px" height="200px" class="postimg" title="File not found!" hspace="20" vspace="3" border="0" align="left">';
         }
         if(strlen($postData['fname']) > 35) $shortendImageName = substr($postData['fname'], 0, 35).'(...)'.$postData['ext']; else $shortendImageName = $postData['fname'].$postData['ext'];
@@ -440,10 +440,10 @@ function drawThread(boardThread $thread) {
         $imgDisplayURL = $board['imageAddr'].$threadOP['tim'].$threadOP['ext'];
         $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="'.$threadOP['tw'].'" height="'.$threadOP['th'].'" class="postimg" title="Click to show full image" hspace="20" vspace="3" border="0" align="left">'; // stay the same but scaled
     } else if(!file_exists($board['imageDir'].$threadOP['tim'].$threadOP['ext'])) {
-        $imgDisplayURL = 'static/image/nothumb.gif'; //if neither thumb or full image is found, then it will use the error image
+        $imgDisplayURL = $conf['staticURL'].'image/nothumb.gif'; //if neither thumb or full image is found, then it will use the error image
         $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="200px" height="150px" class="postimg" title="File not found!" hspace="20" vspace="3" border="0" align="left">';
     } else if($threadOP['ext'] == '.swf') {
-        $imgDisplayURL = 'static/image/swf_thumb.png';
+        $imgDisplayURL = $conf['staticURL'].'image/swf_thumb.png';
         $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="200px" height="200px" class="postimg" title="File not found!" hspace="20" vspace="3" border="0" align="left">';
     }
 
