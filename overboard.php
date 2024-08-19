@@ -208,7 +208,7 @@ function drawHeader() {
 	<meta name="robots" content="follow,archive" />
 	<link class="linkstyle" rel="stylesheet" type="text/css" href="'.$conf['staticURL'].'css/heyuriclassic.css" title="Heyuri Classic" />
 	<link class="linkstyle" rel="stylesheet alternate" type="text/css" href="'.$conf['staticURL'].'css/futaba.css" title="Futaba" />
-	<link class="linkstyle" rel="stylesheet alternate" type="text/css" href='.$conf['staticURL'].'css/oldheyuri.css" title="Sakomoto" />
+	<link class="linkstyle" rel="stylesheet alternate" type="text/css" href="'.$conf['staticURL'].'css/oldheyuri.css" title="Sakomoto" />
 	<link rel="shortcut icon" href="'.$conf['staticURL'].'image/favicon.png" />
 	<script type="text/javascript" src="'.$conf['staticURL'].'js/koko.js"></script>
 	<script type="text/javascript" src="'.$conf['staticURL'].'js/style.js"></script>
