@@ -373,6 +373,7 @@ function drawPost(array $postData, $board) {
         </tr>';
     } else {
         $shortendImageName = $postData['fname'];
+		$imgURL = '';
         $imgDisplayURL = '';
         $imgDisplayElement = '';
         
@@ -407,7 +408,7 @@ function drawPost(array $postData, $board) {
 							<nobr><span class="postnum">
 									<a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'#p'.$postData['no'].'" class="no">No.</a><a href="'.$board['boardurl'].'koko.php?res='.$postData['resto'].'&amp;q='.$postData['no'].'#postform" class="qu" title="Quote">'.$postData['no'].'</a> </span></nobr>
 						</div>
-						<div class="filesize">File: <a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$fnameJS.$postData['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageNameJS.'\'">'.$shortendImageName.'</a> <a href="'.$imgDisplayURL.'" download="'.$postData['fname'].$postData['ext'].'"><div class="download"></div></a> <small>('.$postData['imgsize'].', '.$postData['imgw'].'x'.$postData['imgh'].')</small> </div>
+						<div class="filesize">File: <a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$fnameJS.$postData['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageNameJS.'\'">'.$shortendImageName.'</a> <a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" download="'.$postData['fname'].$postData['ext'].'"><div class="download"></div></a> <small>('.$postData['imgsize'].', '.$postData['imgw'].'x'.$postData['imgh'].')</small> </div>
 						<a href="'.$board['imageAddr'].$postData['tim'].$postData['ext'].'" target="_blank" rel="nofollow">'.$imgDisplayElement.'</a>
 						    
                         <blockquote class="comment">'.$postData['com'].'</blockquote>
