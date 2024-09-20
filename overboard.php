@@ -423,9 +423,7 @@ function drawThread(boardThread $thread) {
     $threadOP = array_merge(...getPostData($thread->getThread(), $thread->getBoard()));   
     $board = $thread->getBoard();
 
-    $shortendImageName = $threadOP['fname']; //used for onmouse event
-    //for OP
-    if(strlen($threadOP['fname']) > 35) $shortendImageName = substr($threadOP['fname'], 0, 35).'(...)'.$threadOP['ext'];
+  
     $threadOP['com'] = prepareComment($threadOP['com'], $board);
     
     //begin thread div
@@ -447,11 +445,13 @@ function drawThread(boardThread $thread) {
         $imgDisplayURL = $conf['staticURL'].'image/swf_thumb.png';
         $imgDisplayElement = '<img src="'.$imgDisplayURL.'"  width="200px" height="200px" class="postimg" title="File not found!" hspace="20" vspace="3" border="0" align="left">';
     }
-
+	
+	$shortendImageName = $threadOP['fname']; //used for onmouse event
+	if(strlen($threadOP['fname']) > 35) $shortendImageName = substr($threadOP['fname'], 0, 35).'(...)'.$threadOP['ext']; else $shortendImageName = $threadOP['fname'].$threadOP['ext'];
     $fnameJS = str_replace('&#039;', '\&#039;', $threadOP['fname']);
     $shortendImageNameJS = str_replace('&#039;', '\&#039;', $shortendImageName);
-    
-    $fileDisplay = '<div class="filesize">File: <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$fnameJS.$threadOP['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageNameJS.$threadOP['ext'].'\'"> '.$shortendImageName.$threadOP['ext'].'</a> <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" download="'.$threadOP['fname'].$threadOP['ext'].'"><div class="download"></div></a> <small>('.$threadOP['imgsize'].', '.$threadOP['imgw'].'x'.$threadOP['imgh'].')</small></div>
+      
+    $fileDisplay = '<div class="filesize">File: <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow" onmouseover="this.textContent=\''.$fnameJS.$threadOP['ext'].'\';" onmouseout="this.textContent=\''.$shortendImageNameJS.'\'"> '.$shortendImageName.'</a> <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" download="'.$threadOP['fname'].$threadOP['ext'].'"><div class="download"></div></a> <small>('.$threadOP['imgsize'].', '.$threadOP['imgw'].'x'.$threadOP['imgh'].')</small></div>
     <a href="'.$board['imageAddr'].$threadOP['tim'].$threadOP['ext'].'" target="_blank" rel="nofollow">'.$imgDisplayElement.'</a>' ;
     if($threadOP['ext'] == '') $fileDisplay = ''; // don't display file stuffz if there's no file (for textboard)
     if($threadOP['email'] == 'noko' || !isset($threadOP['email']) || $threadOP['email'] == '') {
