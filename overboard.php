@@ -164,8 +164,8 @@ function quote_link($comment, $dbBoardDetails){
 }
 
 function prepareComment($comment, $dbBoarDetails) {
-    $comment = quote_unkfunc($comment, $dbBoarDetails);
     $comment = quote_link($comment, $dbBoarDetails);
+    $comment = quote_unkfunc($comment);
     return $comment;
 }
 
